@@ -1,0 +1,25 @@
+class Solution:
+    def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+        if not position or not speed:
+            return 0
+
+        zipped = sorted(zip(position, speed), reverse=True)
+        stack = [zipped[0]]
+        
+        for current_car in zipped[1:]:
+            prev_car = stack[-1]
+            reaches_before = self.reachesBeforeEnd(prev_car, current_car, target)
+            if not reaches_before:
+                stack.append(current_car)
+
+
+        return len(stack)
+
+    def reachesBeforeEnd(self, car1: (int, int), car2: (int, int), target) -> bool:
+        car1_end_distance = target - car1[0]
+        car2_end_distance = target - car2[0]
+
+        car1_time_end = car1_end_distance / car1[1]
+        car2_time_end = car2_end_distance / car2[1]
+
+        return car1_time_end >= car2_time_end
